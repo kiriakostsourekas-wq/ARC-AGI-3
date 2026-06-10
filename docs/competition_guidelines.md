@@ -16,6 +16,36 @@ solver design document.
 - Prize pool for ARC-AGI-3: USD 850,000 total.
 - Prize eligibility requires open-sourcing the solution code and methods.
 
+## Paper-Derived Benchmark Constraints
+
+The ARC-AGI-3 paper frames the benchmark as a test of agentic intelligence,
+not static puzzle solving. Important design constraints from the paper:
+
+- Agents receive no explicit objective or natural-language instructions. They
+  must infer mechanics and win conditions through interaction.
+- Each environment is turn-based. At each turn, the agent receives a frame or
+  frame sequence and must choose one action; the environment does not change
+  asynchronously between actions.
+- Observations are 64x64 grids where each cell is one of 16 colors. Frame
+  sequences may represent non-interactive transition animations.
+- The action space for each environment is a game-specific subset of five key
+  actions, undo, and coordinate selection on the 64x64 grid.
+- The benchmark is designed around Core Knowledge priors only: objectness,
+  geometry/topology, basic physics, and agentness. Environments avoid language,
+  numbers, letters, recognizable real-world icons, and cultural conventions.
+- Public environments are demonstration interfaces, not a comprehensive
+  training distribution. The paper reports 25 public demonstration
+  environments, 55 semi-private environments, and 55 fully private environments.
+- The private set is intentionally harder and out-of-distribution relative to
+  the public set, with broader mechanics and deeper compositional reasoning.
+- First-run efficiency matters. The paper's human baseline is the second-best
+  first-run human playthrough, so exploration cost is part of the score.
+- Context and history management are central challenges because naive storage
+  of raw 64x64 frame histories grows quickly.
+- The paper describes StochasticGoose as a CNN/RL action-change predictor that
+  encoded 64x64 frames with a four-layer convolutional network, scored 12.58%
+  in the preview competition, and completed 18 levels.
+
 ## Key Dates
 
 - Competition start: 2026-03-25.
@@ -156,6 +186,12 @@ The score rewards:
 Internal computation does not count as an action. Only discrete interactions
 that affect the environment count.
 
+The paper emphasizes that this penalizes brute force: a system that blindly
+tries many actions is scored worse than a system that forms a model of the
+environment and plans efficient actions. The official human baseline is based
+on first-run human attempts, so agents are rewarded for efficient adaptation on
+first contact, not just eventual completion.
+
 Per completed level:
 
 ```text
@@ -167,13 +203,18 @@ Additional scoring details:
 - Level score is capped at `1.15`.
 - Per-game score is a weighted average of level scores.
 - Later levels have higher weight because level number is used as the weight.
+- Later levels also matter conceptually because the paper designs environments
+  so later levels require accumulating and integrating mechanics learned in
+  earlier levels.
 - Total score is the average of all game scores.
 - Completing only early levels caps the maximum possible game score even if
   those levels are solved efficiently.
 
 ## Action Interface
 
-All games expose a standardized action interface:
+All games expose a standardized action interface. Per the paper, each game
+uses a subset of these controls so the difficulty is in reasoning about the
+environment, not learning a complex control scheme:
 
 - `RESET`: initialize or restart the game/level state.
 - `ACTION1`: simple action, semantically mapped to up.
@@ -221,3 +262,11 @@ this track or switch/add the exact license ARC requests for authored code.
   https://docs.arcprize.org/actions
 - ARC-AGI-3 competition mode:
   https://docs.arcprize.org/toolkit/competition_mode
+- ARC-AGI-3 paper v1:
+  https://arxiv.org/pdf/2603.24621v1
+- ARC-AGI-3 paper landing page:
+  https://arxiv.org/abs/2603.24621
+- Kaggle StochasticGoose sample:
+  https://www.kaggle.com/code/inversion/arc3-sample-submission-stochastic-goose
+- StochasticGoose source reference:
+  https://github.com/DriesSmit/ARC3-solution

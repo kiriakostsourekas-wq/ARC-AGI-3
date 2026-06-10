@@ -2,8 +2,8 @@
 
 Workspace for the ARC Prize 2026 ARC-AGI-3 Kaggle competition.
 
-This repository is currently in setup/documentation mode only. No solving
-strategy, agent implementation, or experiment harness has been added yet.
+The current baseline is a clean StochasticGoose-style action-effect learner,
+not the random starter agent.
 
 Start here:
 

@@ -18,6 +18,7 @@ vendor/
 environment_files/
 recordings/
 reference/
+runs/
 notebooks/submission.ipynb
 submission.parquet
 *.parquet
