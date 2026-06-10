@@ -1,6 +1,6 @@
 # ARC Prize 2026 ARC-AGI-3 Guidelines
 
-Last checked: 2026-06-09.
+Last checked: 2026-06-10.
 
 This file captures the competition facts we have verified so far. It is not a
 solver design document.
@@ -101,6 +101,48 @@ Kaggle forces ARC-AGI-3 into competition mode. In this mode:
 - The official starter defaults to a T4 GPU notebook, but it can be changed to
   `cpu`, `t4`, `p100`, or `rtx6000` in `scripts/build_notebook.py`.
 
+## Model And Dependency Constraints
+
+There is no official whitelist of allowed model names. The practical rule is
+that the submitted agent must run fully inside the offline Kaggle notebook.
+
+Allowed for submitted runs:
+
+- A non-ML or classical search/programmatic agent.
+- Any local/open-weight model that is already available to the notebook at
+  evaluation time.
+- Model weights attached as Kaggle input data/model artifacts, if their license
+  allows our intended use and prize-publication obligations.
+- Models trained by us before submission, provided the resulting weights and
+  inference code are packaged for offline execution.
+- Local test-time compute inside the Kaggle runtime budget.
+
+Not allowed for submitted runs:
+
+- Runtime API calls to hosted models such as GPT, Claude, Gemini, hosted
+  Hugging Face endpoints, or other external services.
+- Downloading model weights, Python packages, data, prompts, or tools from the
+  internet during the Kaggle evaluation run.
+- Any architecture that depends on network access, a private server, a remote
+  database, or a cloud inference endpoint.
+
+Engineering implications:
+
+- Treat the Kaggle submission as an offline appliance: all code, dependencies,
+  weights, config, and prompt assets must be present before the rerun starts.
+- Do not design the final agent around online LLM calls. We can use external
+  tools while researching locally, but the submitted runtime path must not call
+  them.
+- Keep a separate path for offline inference and make it easy to smoke-test
+  with networking disabled.
+- Track model licenses before adding weights. Prize eligibility requires
+  reproducible open-source submissions and public sharing of authored methods.
+- Watch size and runtime: current metadata reports a `20480` MB submission size
+  limit and `540` minute CPU/GPU runtime limits.
+- Prefer lightweight models or deterministic/search-heavy methods until there
+  is evidence that a larger local model improves score enough to justify the
+  packaging and runtime cost.
+
 ## Scoring
 
 ARC-AGI-3 uses Relative Human Action Efficiency (RHAE).
@@ -179,4 +221,3 @@ this track or switch/add the exact license ARC requests for authored code.
   https://docs.arcprize.org/actions
 - ARC-AGI-3 competition mode:
   https://docs.arcprize.org/toolkit/competition_mode
-
