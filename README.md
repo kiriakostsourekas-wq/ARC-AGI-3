@@ -11,3 +11,15 @@ Start here:
 - [Research intake notes](knowledge/research_notes.md)
 - Kaggle competition: https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3
 - ARC-AGI-3 docs: https://docs.arcprize.org/
+- Official Kaggle starter: https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter
+
+Local setup:
+
+```bash
+make setup
+make verify-local
+make notebook
+```
+
+`make submit` is intentionally separate. Before submitting, update
+`notebooks/kernel-metadata.json` with the Kaggle notebook slug for this account.

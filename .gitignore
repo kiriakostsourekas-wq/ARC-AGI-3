@@ -11,15 +11,20 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.cache/
 
 # ARC/Kaggle starter generated or downloaded content
 vendor/
 environment_files/
+recordings/
+reference/
 notebooks/submission.ipynb
 submission.parquet
 *.parquet
 
 # Local logs and OS files
 *.log
+logs.log
 .DS_Store
-
+.idea/
+.vscode/
